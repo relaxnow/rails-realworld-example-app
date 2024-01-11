@@ -20,12 +20,10 @@ jobs:
         curl -sSL https://get.rvm.io | bash
         echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function' >> ~/.bashrc
         source /home/runner/.rvm/scripts/rvm
-        sudo usermod -a -G rvm $USER
     
     - name: Veracode packaging
       run: |
         source /home/runner/.rvm/scripts/rvm
-        sudo usermod -a -G rvm $USER
         export GOPATH=`go env GOPATH` &&
         export PATH="$GOPATH/bin:$PATH" &&
         go install github.com/relaxnow/vcrbpkg/cmd/vcrbpkg@latest
