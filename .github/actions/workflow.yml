@@ -1,0 +1,37 @@
+name: Veracode Build Ruby on Rals Application
+
+on: workflow_dispatch
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # The branch, tag or SHA to checkout. When checking out the repository that
+        # triggered a workflow, this defaults to the reference or SHA for that event.
+        # Otherwise, uses the default branch.
+        ref: 'rails-5.1'
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.6'
+
+    - name: Install RVM
+      run: |
+        sudo apt-get install software-properties-common
+        sudo apt-add-repository -y ppa:rael-gc/rvm
+        sudo apt-get update
+        sudo apt-get install rvm
+        echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function' >> ~/.bashrc
+        source /etc/profile.d/rvm.sh
+        sudo usermod -a -G rvm $USER
+    
+    - name: Veracode packaging
+      run: |
+        source /etc/profile.d/rvm.sh
+        sudo usermod -a -G rvm $USER
+        export GOPATH=`go env GOPATH` &&
+        export PATH="$GOPATH/bin:$PATH" &&
+        go install github.com/relaxnow/vcrbpkg/cmd/vcrbpkg@latest
+        vcrbpkg ./
