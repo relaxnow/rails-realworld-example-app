@@ -21,6 +21,7 @@ jobs:
         echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function' >> ~/.bashrc
         source /etc/profile.d/rvm.sh
         sudo usermod -a -G rvm $USER
+        rvm install 2.4.0
     
     - name: Veracode packaging
       run: |
