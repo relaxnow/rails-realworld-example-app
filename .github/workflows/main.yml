@@ -1,27 +1,18 @@
 name: Veracode Build Ruby on Rals Application
 
-on:
-  workflow_call:
-    inputs:
-      repository:
-        required: true
-        type: string
-      ref:
-        required: true
-        type: string
-      token:
-        required: true
-        type: string
+on: workflow_dispatch
   
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
-        repository: ${{ inputs.repository }}
-        ref: ${{ inputs.ref }}
-        token: ${{ inputs.token }}
+        # The branch, tag or SHA to checkout. When checking out the repository that
+        # triggered a workflow, this defaults to the reference or SHA for that event.
+        # Otherwise, uses the default branch.
+        ref: 'rails-5.1'
+
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: '2.6'
@@ -44,20 +35,3 @@ jobs:
         export PATH="$GOPATH/bin:$PATH" &&
         go install github.com/relaxnow/vcrbpkg/cmd/vcrbpkg@latest
         vcrbpkg ./
-      
-    - name: Identify the Artifact
-      id: identify
-      run: |
-        zip_files=$(find tmp -name "veracode*.zip" -type f -maxdepth 1 -exec basename {} \;)
-        if [ ! -z "$zip_files" ]; then
-          artifact_file=$zip_files
-        else
-          echo "no files found"
-        fi
-        echo $artifact_file
-        echo "veracode_artifact=$artifact_file" >> $GITHUB_ENV
-        
-    - uses: actions/upload-artifact@v3
-      with:
-        name: veracode-artifact
-        path: tmp/${{ env.veracode_artifact }}
