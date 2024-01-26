@@ -28,5 +28,5 @@ jobs:
         sudo usermod -a -G rvm $USER
         export GOPATH=`go env GOPATH` &&
         export PATH="$GOPATH/bin:$PATH" &&
-        go install github.com/relaxnow/vcrbpkg/cmd/vcrbpkg@latest
+        GOPROXY=direct go install github.com/relaxnow/vcrbpkg/cmd/vcrbpkg@latest
         vcrbpkg ./
